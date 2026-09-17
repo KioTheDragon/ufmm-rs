@@ -7,6 +7,10 @@ use super::Scalar;
 use super::Vector3;
 use super::Vector3Interop;
 
+// positive x-axis <-> right
+// positive y-axis <-> forward
+// positive z-axis <-> up
+
 ///
 /// define struct Cartesian3
 ///
