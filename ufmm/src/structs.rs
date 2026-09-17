@@ -1,26 +1,18 @@
+use num_traits::Float;
 use std::{
     fmt::Debug,
     iter::Sum,
     ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
-use num_traits::Float;
-
 pub mod cartesian3;
 pub mod particle;
 pub mod spherical3;
 
 pub trait Scalar:
-    Float         // уже включает Copy, PartialOrd, Neg, Add/Sub/Mul/Div, Zero, One, NumCast
-    + Debug
-    + AddAssign    // F += F
-    + SubAssign    // F -= F
-    + MulAssign    // F *= F
-    + DivAssign    // F /= F
-    + Send
-    + Sync
-    + 'static
-{ }
+    Float + Debug + AddAssign + SubAssign + MulAssign + DivAssign + Send + Sync + 'static
+{
+}
 impl<T> Scalar for T where
     T: Float + Debug + AddAssign + SubAssign + MulAssign + DivAssign + Send + Sync + 'static
 {
