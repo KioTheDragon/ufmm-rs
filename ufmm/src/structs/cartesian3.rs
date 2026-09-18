@@ -11,6 +11,9 @@ use super::Vector3Interop;
 // positive y-axis <-> forward
 // positive z-axis <-> up
 
+// Cartesian3 follows IEEE-754 semantics
+// NaN propagates through arithmetic; +-inf is a legal coordinate
+
 ///
 /// define struct Cartesian3
 ///

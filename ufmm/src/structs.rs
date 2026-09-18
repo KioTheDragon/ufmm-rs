@@ -2,7 +2,7 @@ use num_traits::Float;
 use std::{
     fmt::Debug,
     iter::Sum,
-    ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub, SubAssign},
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
 pub mod cartesian3;
@@ -34,9 +34,6 @@ pub trait Vector3<F: Scalar>:
     + MulAssign<F>
     + Div<F, Output = Self>
     + DivAssign<F>
-    // vec[i] access
-    + Index<usize, Output = F>
-    + IndexMut<usize>
     // sum of [vec]
     + Sum<Self>
 {
@@ -67,7 +64,7 @@ pub trait Vector3<F: Scalar>:
     /// |vec1 - vec2|^2
     fn distance_squared(&self, rhs: &Self) -> F;
 
-    /// angle(vec1, vec2) in [[0, π]]
+    /// angle(vec1, vec2) in [0, π]
     fn angle_between(&self, rhs: &Self) -> F;
 }
 
