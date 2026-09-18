@@ -71,7 +71,7 @@ pub trait Vector3<F: Scalar>:
     fn angle_between(&self, rhs: &Self) -> F;
 }
 
-/// Converse with all others 3-dimensional vectors
+/// Converse with all others 3-dimensional cartesian-type vectors
 pub trait Vector3Interop<F: Scalar>:
     Vector3<F>
     + MintVector3Convertible<F>
