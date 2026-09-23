@@ -1,4 +1,4 @@
-use num_traits::Float;
+use super::Float;
 use std::{
     fmt::Debug,
     iter::Sum,
@@ -8,15 +8,7 @@ use std::{
 pub mod cartesian3;
 pub mod spherical3;
 
-pub trait Scalar:
-    Float + Debug + AddAssign + SubAssign + MulAssign + DivAssign + Send + Sync + 'static
-{
-}
-impl<T> Scalar for T where
-    T: Float + Debug + AddAssign + SubAssign + MulAssign + DivAssign + Send + Sync + 'static
-{
-}
-pub trait Vector3<F: Scalar>:
+pub trait Vector3<F: Float>:
     Sized
     + Copy
     + PartialEq
@@ -68,7 +60,7 @@ pub trait Vector3<F: Scalar>:
 }
 
 /// Converse with all others 3-dimensional cartesian-type vectors
-pub trait Vector3Interop<F: Scalar>:
+pub trait Vector3Interop<F: Float>:
     Vector3<F>
     + MintVector3Convertible<F>
     + MintPoint3Convertible<F>
@@ -78,23 +70,23 @@ pub trait Vector3Interop<F: Scalar>:
 }
 
 /// Converse with `mint::Vector3<F>`.
-pub trait MintVector3Convertible<F: Scalar>:
+pub trait MintVector3Convertible<F: Float>:
     From<mint::Vector3<F>> + Into<mint::Vector3<F>>
 {
 }
-impl<T, F: Scalar> MintVector3Convertible<F> for T where
+impl<T, F: Float> MintVector3Convertible<F> for T where
     T: From<mint::Vector3<F>> + Into<mint::Vector3<F>>
 {
 }
 /// Converse with `mint::Point3<F>`.
-pub trait MintPoint3Convertible<F: Scalar>: From<mint::Point3<F>> + Into<mint::Point3<F>> {}
-impl<T, F: Scalar> MintPoint3Convertible<F> for T where
+pub trait MintPoint3Convertible<F: Float>: From<mint::Point3<F>> + Into<mint::Point3<F>> {}
+impl<T, F: Float> MintPoint3Convertible<F> for T where
     T: From<mint::Point3<F>> + Into<mint::Point3<F>>
 {
 }
 /// Converse with `[F; 3]`.
-pub trait Array3Convertible<F: Scalar>: From<[F; 3]> + Into<[F; 3]> {}
-impl<T, F: Scalar> Array3Convertible<F> for T where T: From<[F; 3]> + Into<[F; 3]> {}
+pub trait Array3Convertible<F: Float>: From<[F; 3]> + Into<[F; 3]> {}
+impl<T, F: Float> Array3Convertible<F> for T where T: From<[F; 3]> + Into<[F; 3]> {}
 /// Converse with `(F, F, F)`.
-pub trait Tuple3Convertible<F: Scalar>: From<(F, F, F)> + Into<(F, F, F)> {}
-impl<T, F: Scalar> Tuple3Convertible<F> for T where T: From<(F, F, F)> + Into<(F, F, F)> {}
+pub trait Tuple3Convertible<F: Float>: From<(F, F, F)> + Into<(F, F, F)> {}
+impl<T, F: Float> Tuple3Convertible<F> for T where T: From<(F, F, F)> + Into<(F, F, F)> {}

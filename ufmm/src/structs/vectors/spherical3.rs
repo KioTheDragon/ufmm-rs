@@ -4,11 +4,11 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssi
 
 use super::cartesian3::Cartesian3;
 
-use super::Scalar;
+use super::Float;
 use super::Vector3;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Spherical3<F: Scalar> {
+pub struct Spherical3<F: Float> {
     r: F,
     theta: F,
     phi: F,
@@ -31,7 +31,7 @@ pub struct Spherical3<F: Scalar> {
 ///
 /// define struct Spherical3
 ///
-impl<F: Scalar> Spherical3<F> {
+impl<F: Float> Spherical3<F> {
     pub fn new(r: F, theta: F, phi: F) -> Self {
         assert!(!r.is_nan(), "r cant be NaN");
         assert!(theta.is_finite(), "theta must be finite");
@@ -45,7 +45,7 @@ impl<F: Scalar> Spherical3<F> {
     }
 }
 
-impl<F: Scalar> Default for Spherical3<F> {
+impl<F: Float> Default for Spherical3<F> {
     fn default() -> Self {
         Self::zero()
     }
@@ -53,7 +53,7 @@ impl<F: Scalar> Default for Spherical3<F> {
 ///
 /// access to fields with safety
 ///
-impl<F: Scalar> Spherical3<F> {
+impl<F: Float> Spherical3<F> {
     pub fn get_r(&self) -> F {
         self.r
     }
@@ -90,7 +90,7 @@ impl<F: Scalar> Spherical3<F> {
 ///
 /// conversion between cartesian3 and spherical3
 ///
-impl<F: Scalar> From<Cartesian3<F>> for Spherical3<F> {
+impl<F: Float> From<Cartesian3<F>> for Spherical3<F> {
     fn from(value: Cartesian3<F>) -> Self {
         assert!(
             !value.x.is_nan() && !value.y.is_nan() && !value.z.is_nan(),
@@ -106,7 +106,7 @@ impl<F: Scalar> From<Cartesian3<F>> for Spherical3<F> {
     }
 }
 
-impl<F: Scalar> From<Spherical3<F>> for Cartesian3<F> {
+impl<F: Float> From<Spherical3<F>> for Cartesian3<F> {
     fn from(value: Spherical3<F>) -> Self {
         Cartesian3::new(
             value.r * value.theta.sin() * value.phi.cos(),
@@ -119,7 +119,7 @@ impl<F: Scalar> From<Spherical3<F>> for Cartesian3<F> {
 ///
 /// Help function for distance() and distance_squared()
 ///
-impl<F: Scalar> Spherical3<F> {
+impl<F: Float> Spherical3<F> {
     fn angular_haversine(&self, rhs: &Self) -> F {
         let sin_dtheta_half = ((self.theta - rhs.theta) / (F::one() + F::one())).sin();
         let sin_dphi_half = ((self.phi - rhs.phi) / (F::one() + F::one())).sin();
@@ -131,7 +131,7 @@ impl<F: Scalar> Spherical3<F> {
 ///
 /// Help functions for normalize angles
 ///
-impl<F: Scalar> Spherical3<F> {
+impl<F: Float> Spherical3<F> {
     // phi in [-Pi, Pi], so dont need to touch theta
     fn normalize_phi(phi: F) -> F {
         let scalar_pi = F::from(PI).expect("Cant convert PI<f64> to <Scalar>");
@@ -165,7 +165,7 @@ impl<F: Scalar> Spherical3<F> {
 /// basic math operations
 ///
 // vec + vec
-impl<F: Scalar> Add for Spherical3<F> {
+impl<F: Float> Add for Spherical3<F> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
         (Cartesian3::from(self) + Cartesian3::from(rhs)).into()
@@ -173,14 +173,14 @@ impl<F: Scalar> Add for Spherical3<F> {
 }
 
 // vec += vec
-impl<F: Scalar> AddAssign for Spherical3<F> {
+impl<F: Float> AddAssign for Spherical3<F> {
     fn add_assign(&mut self, rhs: Self) {
         *self = (Cartesian3::from(*self) + Cartesian3::from(rhs)).into();
     }
 }
 
 // vec - vec
-impl<F: Scalar> Sub for Spherical3<F> {
+impl<F: Float> Sub for Spherical3<F> {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         (Cartesian3::from(self) - Cartesian3::from(rhs)).into()
@@ -188,14 +188,14 @@ impl<F: Scalar> Sub for Spherical3<F> {
 }
 
 // vec -= vec
-impl<F: Scalar> SubAssign for Spherical3<F> {
+impl<F: Float> SubAssign for Spherical3<F> {
     fn sub_assign(&mut self, rhs: Self) {
         *self = (Cartesian3::from(*self) - Cartesian3::from(rhs)).into();
     }
 }
 
 // -vec
-impl<F: Scalar> Neg for Spherical3<F> {
+impl<F: Float> Neg for Spherical3<F> {
     type Output = Self;
     fn neg(self) -> Self::Output {
         if self.r.is_zero() {
@@ -207,7 +207,7 @@ impl<F: Scalar> Neg for Spherical3<F> {
 }
 
 // vec * scalar
-impl<F: Scalar> Mul<F> for Spherical3<F> {
+impl<F: Float> Mul<F> for Spherical3<F> {
     type Output = Self;
     fn mul(self, rhs: F) -> Self::Output {
         if rhs.is_zero() {
@@ -220,7 +220,7 @@ impl<F: Scalar> Mul<F> for Spherical3<F> {
 }
 
 // vec *= scalar
-impl<F: Scalar> MulAssign<F> for Spherical3<F> {
+impl<F: Float> MulAssign<F> for Spherical3<F> {
     fn mul_assign(&mut self, rhs: F) {
         if rhs.is_zero() {
             *self = Self::zero();
@@ -233,7 +233,7 @@ impl<F: Scalar> MulAssign<F> for Spherical3<F> {
 }
 
 // vec / scalar
-impl<F: Scalar> Div<F> for Spherical3<F> {
+impl<F: Float> Div<F> for Spherical3<F> {
     type Output = Self;
     fn div(self, rhs: F) -> Self::Output {
         if rhs.is_infinite() {
@@ -247,7 +247,7 @@ impl<F: Scalar> Div<F> for Spherical3<F> {
 }
 
 // vec /= scalar
-impl<F: Scalar> DivAssign<F> for Spherical3<F> {
+impl<F: Float> DivAssign<F> for Spherical3<F> {
     fn div_assign(&mut self, rhs: F) {
         if rhs.is_infinite() {
             *self = Self::zero();
@@ -260,7 +260,7 @@ impl<F: Scalar> DivAssign<F> for Spherical3<F> {
     }
 }
 
-impl<F: Scalar> Vector3<F> for Spherical3<F> {
+impl<F: Float> Vector3<F> for Spherical3<F> {
     fn zero() -> Self {
         Self::new(F::zero(), F::zero(), F::zero())
     }
@@ -322,14 +322,14 @@ impl<F: Scalar> Vector3<F> for Spherical3<F> {
 }
 
 // sum of [vec]
-impl<F: Scalar> Sum for Spherical3<F> {
+impl<F: Float> Sum for Spherical3<F> {
     fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
         iter.fold(Self::zero(), |acc, v| acc + v)
     }
 }
 
 // check vec == vec correctly
-impl<F: Scalar> PartialEq for Spherical3<F> {
+impl<F: Float> PartialEq for Spherical3<F> {
     fn eq(&self, other: &Self) -> bool {
         self.r == other.r
             && (self.r.is_zero() || (self.theta == other.theta && self.phi == other.phi))
