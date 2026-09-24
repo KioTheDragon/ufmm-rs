@@ -1,3 +1,4 @@
+pub mod fmminstances;
 pub mod kernels;
 pub mod mortonbits;
 pub mod translationschemas;
